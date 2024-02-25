@@ -1,7 +1,9 @@
 package io.moderne.scouting.cookies.inventory;
 
-import org.springframework.stereotype.Service;
 import io.moderne.scouting.cookies.CookieType;
+import io.moderne.scouting.cookies.error.ApiError;
+import io.moderne.scouting.cookies.error.ApiException;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +28,7 @@ public class InventoryService {
         Map<CookieType, Integer> newInventory = new HashMap<>(inventory);
         cookies.forEach((cookieType, quantity) -> newInventory.merge(cookieType, -quantity, Integer::sum));
         if (newInventory.values().stream().anyMatch(i -> i < 0)) {
-            throw new IllegalArgumentException("Not enough inventory");
+            throw new ApiException(new ApiError("Inventory", "Not enough inventory"));
         }
         inventory.clear();
         inventory.putAll(newInventory);
