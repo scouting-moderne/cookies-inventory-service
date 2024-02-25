@@ -20,18 +20,6 @@ configurations {
 repositories {
     mavenLocal()
     mavenCentral()
-    def artifactoryUsername = System.getenv("MODERNE_ARTIFACTORY_USERNAME")
-    def artifactoryPassword = System.getenv("MODERNE_ARTIFACTORY_PASSWORD")
-    if (artifactoryUsername != null && artifactoryPassword != null) {
-        maven {
-            name = "ModerneArtifactory"
-            url = uri("https://artifactory.moderne.ninja/artifactory/moderne-demo")
-            credentials {
-                username = artifactoryUsername
-                password = artifactoryPassword
-            }
-        }
-    }
 }
 
 dependencies {
