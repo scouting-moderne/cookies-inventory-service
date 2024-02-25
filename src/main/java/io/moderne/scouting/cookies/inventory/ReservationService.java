@@ -38,4 +38,19 @@ public class ReservationService {
         db.put(reservation.getId(), reservation);
         return reservation;
     }
+
+    public Reservation verified(String userId, String reservationId) {
+        User user = userClient.findUser(userId).orElseThrow(() -> new ApiException(new ApiError("User", "User not found")));
+        Reservation found = db.get(reservationId);
+        if (found == null) {
+            return null;
+        }
+        if (found.getExpiresAt() == null || found.getExpiresAt().isBefore(Instant.now())) {
+            throw new ApiException(new ApiError("Reservation", "Reservation expired"));
+        }
+        if (!found.getUser().equals(user)) {
+            throw new ApiException(new ApiError("Reservation", "User mismatch"));
+        }
+        return found;
+    }
 }

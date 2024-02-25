@@ -25,6 +25,11 @@ class InventoryController {
         return reservationService.reserve(request.userId(), request.cookies());
     }
 
+    @PostMapping("/verify")
+    public Reservation verify(@RequestBody ReservationVerifyRequest request) {
+        return reservationService.verified(request.userId(),request.reservationId());
+    }
+
     @PostMapping("/check")
     public boolean check(@RequestBody InventoryRequest request) {
         return inventoryService.checkAvailability(request.cookies());
@@ -35,4 +40,8 @@ class InventoryController {
 
     record ReservationRequest(String userId, Map<CookieType, Integer> cookies) {
     }
+
+    record ReservationVerifyRequest(String userId, String reservationId) {
+    }
+
 }
