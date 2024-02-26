@@ -23,13 +23,13 @@ public class ReservationService {
     private final UserClient userClient;
 
     public Reservation reserve(String userId, Map<CookieType, Integer> cookies) {
-        User user = userClient.findUser(userId).orElseThrow(() -> new ApiException(new ApiError("User", "User not found")));
+        User user = userClient.findUser(userId).orElseThrow(() -> new ApiException(new ApiError("User", "User not found", null)));
         if (inventoryService.checkAvailability(cookies)) {
             Reservation reservation = createReservation(user, cookies);
             inventoryService.reserve(cookies);
             return reservation;
         }
-        throw new ApiException(new ApiError("Inventory", "Not enough inventory"));
+        throw new ApiException(new ApiError("Inventory", "Not enough inventory", null));
     }
 
     private Reservation createReservation(User user, Map<CookieType, Integer> cookies) {
@@ -40,16 +40,16 @@ public class ReservationService {
     }
 
     public Reservation verified(String userId, String reservationId) {
-        User user = userClient.findUser(userId).orElseThrow(() -> new ApiException(new ApiError("User", "User not found")));
+        User user = userClient.findUser(userId).orElseThrow(() -> new ApiException(new ApiError("User", "User not found", null)));
         Reservation found = db.get(reservationId);
         if (found == null) {
             return null;
         }
         if (found.getExpiresAt() == null || found.getExpiresAt().isBefore(Instant.now())) {
-            throw new ApiException(new ApiError("Reservation", "Reservation expired"));
+            throw new ApiException(new ApiError("Reservation", "Reservation expired", null));
         }
         if (!found.getUser().equals(user)) {
-            throw new ApiException(new ApiError("Reservation", "User mismatch"));
+            throw new ApiException(new ApiError("Reservation", "User mismatch", null));
         }
         return found;
     }

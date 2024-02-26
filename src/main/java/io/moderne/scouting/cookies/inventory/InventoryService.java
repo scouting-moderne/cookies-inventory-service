@@ -28,7 +28,7 @@ public class InventoryService {
         Map<CookieType, Integer> newInventory = new HashMap<>(inventory);
         cookies.forEach((cookieType, quantity) -> newInventory.merge(cookieType, -quantity, Integer::sum));
         if (newInventory.values().stream().anyMatch(i -> i < 0)) {
-            throw new ApiException(new ApiError("Inventory", "Not enough inventory"));
+            throw new ApiException(new ApiError("Inventory", "Not enough inventory", null));
         }
         inventory.clear();
         inventory.putAll(newInventory);
