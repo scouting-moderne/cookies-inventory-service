@@ -57,7 +57,7 @@ public class InventoryControllerTest {
         InventoryController.ReservationRequest request = new InventoryController.ReservationRequest("unknown", cookies);
         ResponseEntity<ApiError> response = testRestTemplate.postForEntity("/inventory/reserve", request, ApiError.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
-        assertThat(response.getBody()).isEqualTo(new ApiError("User", "User not found"));
+        assertThat(response.getBody()).isEqualTo(new ApiError("User", "User not found", 500));
     }
 
     @Test
@@ -66,6 +66,6 @@ public class InventoryControllerTest {
         InventoryController.ReservationRequest request = new InventoryController.ReservationRequest("abc123", cookies);
         ResponseEntity<ApiError> response = testRestTemplate.postForEntity("/inventory/reserve", request, ApiError.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
-        assertThat(response.getBody()).isEqualTo(new ApiError("Inventory", "Not enough inventory"));
+        assertThat(response.getBody()).isEqualTo(new ApiError("Inventory", "Not enough inventory", 500));
     }
 }
